@@ -17,19 +17,19 @@
                     <p class="text-center">Parameters</p>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="duration">Duration</span>
-                        <input type="text" class="form-control" placeholder="for example, 10">
+                        <input class="form-control" placeholder="for example, 10" id="durationInput" type="text" >
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="framerate">Framerate</span>
-                        <input type="text" class="form-control" placeholder="for example, 60">
+                        <input type="text" class="form-control" id="framerateInput" placeholder="for example, 60">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="height">Height</span>
-                        <input type="text" class="form-control" placeholder="for example, 1080">
+                        <input type="text" class="form-control" id="heightInput" placeholder="for example, 1080">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="width">Width</span>
-                        <input type="text" class="form-control" placeholder="for example, 1920">
+                        <input type="text" class="form-control" id="widthInput" placeholder="for example, 1920">
                     </div>
                 </div>
                 <div class="col" id="viewport">
@@ -46,6 +46,11 @@
     </form>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
     <script>
+        var durationInput = document.getElementById('durationInput');
+        var framerateInput = document.getElementById('framerateInput');
+        var heightInput = document.getElementById('heightInput');
+        var widthInput = document.getElementById('widthInput');
+
         const imageInput = document.getElementById('imageInput');
         const renderButton = document.getElementById('renderButton');
         const statusDiv = document.getElementById('status');
@@ -56,8 +61,18 @@
         });
 
         renderButton.addEventListener('click', async () => {
+            const duration = durationInput.value;
+            const framerate = framerateInput.value;
+            const height = heightInput.value;
+            const width = widthInput.value;
+
             const image = imageInput.files[0];
             const formData = new FormData();
+            formData.append('duration', duration);
+            formData.append('framerate', framerate);
+            formData.append('height', height);
+            formData.append('width', width);
+
             formData.append('image', image);
 
             renderButton.disabled = true;

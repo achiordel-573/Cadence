@@ -11,10 +11,14 @@ celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
 
 @celery.task
-def create_parallax_video(image_path):
+def create_parallax_video(image_path, params):
+    duration = params["duration"] or "10"
+    framerate = params["framerate"] or "60"
+    height = params["height"] or "1080"
+    width = params["width"] or "1920"
     try:
         output_video = f"static/output_{uuid.uuid4()}.mp4"
-        command = ["depthflow", "input", "-i", image_path, "main",  "-o", output_video]
+        command = ["depthflow", "input", "-i", image_path, "main", "--time", duration, "--fps", framerate, "--height", height, "--width", width,  "-o", output_video]
         subprocess.run(command, check=True)
         return output_video
     except subprocess.CalledProcessError as e:
@@ -26,8 +30,18 @@ def index():
 
 @app.route('/api/create_video', methods=['POST'])
 def create_video():
+    print(request.form)
     if 'image' not in request.files:
         return jsonify({'error': 'No image provided'}), 400
+
+    params = {
+        "duration": None if request.form["duration"] == "" else request.form["duration"],
+        "framerate": None if request.form["framerate"] == "" else request.form["framerate"],
+        "height": None if request.form["height"] == "" else request.form["height"],
+        "width": None if request.form["width"] == "" else request.form["width"]
+    }
+
+    print(params)
     
     image = request.files['image']
     if image.filename == '':
@@ -36,7 +50,7 @@ def create_video():
     image_path = f'temp/temp_{uuid.uuid4()}.jpg'
     image.save(f'{image_path}')
 
-    task = create_parallax_video.delay(image_path)
+    task = create_parallax_video.delay(image_path, params)
     return jsonify({'task_id': task.id}), 202
 
 @app.route("/api/task_status/<task_id>", methods=['GET'])
