@@ -7,41 +7,114 @@
 <body>
     <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand">Cadence</a>
+            <a class="navbar-brand">Каденция</a>
         </div>
     </nav>
     <form>
         <div class="container my-3">
             <div class="row">
                 <div class="col">
-                    <p class="text-center">Parameters</p>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="duration">Duration</span>
-                        <input class="form-control" placeholder="for example, 10" id="durationInput" type="text" >
+                    <p class="text-center">Параметры</p>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" value="10" id="durationInput" type="text">
+                        <label for="durationInput">Длительность</label>
                     </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="framerate">Framerate</span>
-                        <input type="text" class="form-control" id="framerateInput" placeholder="for example, 60">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="framerateInput" value="60">
+                        <label for="framerateInput">Кадры в секунду</label>
                     </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="height">Height</span>
-                        <input type="text" class="form-control" id="heightInput" placeholder="for example, 1080">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="heightInput" value="1080">
+                        <label for="heightInput">Высота</label>
                     </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="width">Width</span>
-                        <input type="text" class="form-control" id="widthInput" placeholder="for example, 1920">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="widthInput" value="1920">
+                        <label for="widthInput">Ширина</label>
                     </div>
                 </div>
                 <div class="col" id="viewport">
                     <div id="status"></div>
-                    <p class="text-center">Generated Video</p>
+                    <p class="text-center">Окно результата</p>
                     <video controls id="videoOutput" width="600"></video>
                 </div>
             </div>
         </div>
         <div class="container">
+            <p class="text-center">Настройки анимации</p>
+            <ul class="nav nav-tabs justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" id="anim_circle">Круговая</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" id="anim_vertical">Вертикальная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" id="anim_horizontal">Горизонтальная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" id="anim_zoom">Приближение</a>
+                </li>
+            </ul>
+            <div class="my-3" id="anim_circle_params" hidden>
+                <div class="my-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="enabled">
+                        <label class="form-check-label" for="enabled">Использовать</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="looped" disabled>
+                        <label class="form-check-label" for="looped">Зациклить</label>
+                    </div>
+                </div>
+                <div class="container text-center">
+                    <div class="row">
+                        <div class="col">
+                             <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="intensityInput" value="1.0" disabled>
+                                <label for="intensityInput">Интенсивность</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="smoothInput" value="linear" disabled>
+                                <label for="smoothInput">Плавность</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="reverseInput" value="forward" disabled>
+                                <label for="reverseInput">Реверс</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="isometricInput" value="0.6" disabled>
+                                <label for="isometricInput">Изометрия</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="cumulativeInput" value="force" disabled>
+                                <label for="cumulativeInput">Кумулятивность</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="steadyInput" value="0.3" disabled>
+                                <label for="steadyInput">Постоянность</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
             <input type="file" class="form-control" id="imageInput">
-            <button type="button" class="btn btn-dark form-control my-3" id="renderButton">Create video</button>
+            <button type="button" class="btn btn-dark form-control my-3" id="renderButton">Создать видео</button>
         </div>
     </form>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
@@ -51,10 +124,66 @@
         var heightInput = document.getElementById('heightInput');
         var widthInput = document.getElementById('widthInput');
 
+        var animationCircleTab = document.getElementById('anim_circle');
+        var animationVerticalTab = document.getElementById('anim_vertical');
+        var animationHorizontalTab = document.getElementById('anim_horizontal');
+        var animationZoomTab = document.getElementById('anim_zoom');
+
+        var animationCircleCanvas = document.getElementById('anim_circle_params')
+        var animationCircleEnable = document.getElementById('enabled');
+        var animationCircleLoop = document.getElementById('looped');
+
+        intensity = document.getElementById('intensityInput');
+        reverse = document.getElementById('reverseInput');
+        steady = document.getElementById('steadyInput');
+        isometric = document.getElementById('isometricInput');
+        cumulative = document.getElementById('cumulativeInput');
+        smooth = document.getElementById('smoothInput');
+
+
         const imageInput = document.getElementById('imageInput');
         const renderButton = document.getElementById('renderButton');
         const statusDiv = document.getElementById('status');
         const videoOutput = document.getElementById('videoOutput');
+
+        animationCircleTab.addEventListener('click', () => {
+            animationCircleTab.classList.add("active");
+            animationCircleCanvas.hidden = false;
+            animationVerticalTab.classList.remove("active");
+            animationHorizontalTab.classList.remove("active");
+            animationZoomTab.classList.remove("anim_zoom_tab");
+        });
+
+        animationCircleEnable.addEventListener('click', () => {
+            if (animationCircleEnable.checked === true) {
+                animationCircleLoop.disabled = false;
+                intensity.disabled = false;
+                reverse.disabled = false;
+                steady.disabled = false;
+                isometric.disabled = false;
+                cumulative.disabled = false;
+                smooth.disabled = false;
+
+                durationInput.disabled = true;
+                framerateInput.disabled = true;
+                heightInput.disabled = true;
+                widthInput.disabled = true;
+            } else {
+                animationCircleLoop.disabled = true;
+                intensity.disabled = true;
+                reverse.disabled = true;
+                steady.disabled = true;
+                isometric.disabled = true;
+                cumulative.disabled = true;
+                smooth.disabled = true;
+
+                durationInput.disabled = false;
+                framerateInput.disabled = false;
+                heightInput.disabled = false;
+                widthInput.disabled = false;
+            }
+        });
+        
 
         imageInput.addEventListener('change', () => {
             renderButton.disabled = !imageInput.files[0];
@@ -75,8 +204,19 @@
 
             formData.append('image', image);
 
+            if (animationCircleEnable.checked) {
+                formData.append('animation_type', 'circle');
+                formData.append('looped', animationCircleLoop.checked);
+                formData.append('cumulative', cumulative.value);
+                formData.append('intensity', intensity.value);
+                formData.append('smooth', smooth.value);
+                formData.append('isometric', isometric.value);
+                formData.append('steady', steady.value);
+                formData.append('reverse', reverse.value);
+            }
+
             renderButton.disabled = true;
-            statusDiv.innerText = 'Sending image...';
+            statusDiv.innerText = 'Отправка изображения...';
 
             try {
                 const response = await fetch('/api/create_video', {
@@ -86,17 +226,17 @@
 
                 const data = await response.json();
                 if (response.status !== 202) {
-                    statusDiv.innerText = `Error: ${data.error}`;
+                    statusDiv.innerText = `Ошибка: ${data.error}`;
                     renderButton.disabled = false;
                     return;
                 }
 
                 const taskId = data.task_id;
-                statusDiv.innerText = `Rendering started. Task ID: ${taskId}.  Checking status...`;
+                statusDiv.innerText = `Рендеринг запущен. Идентификатор задания: ${taskId}.  Проверка состояния задачи...`;
                 await pollTaskStatus(taskId);
 
             } catch (error) {
-                statusDiv.innerText = `Error: ${error}`;
+                statusDiv.innerText = `Ошибка: ${error}`;
                 renderButton.disabled = false;
             }
         });
@@ -108,20 +248,20 @@
                     const data = await response.json();
 
                     if (data.state === 'SUCCESS') {
-                        statusDiv.innerText = 'Rendering complete!  Here is the video:';
+                        statusDiv.innerText = 'Рендеринг успешно завершен! Видео доступно в панели предпросмотра:';
                         videoOutput.src = data.status;
                         videoOutput.style.display = 'block';
                         renderButton.disabled = false;
                         clearInterval(intervalId);
                     } else if (data.state === 'FAILURE') {
-                        statusDiv.innerText = `Rendering failed: ${data.status}`;
+                        statusDiv.innerText = `Ошибка рендеринга: ${data.status}`;
                         renderButton.disabled = false;
                         clearInterval(intervalId);
                     } else {
-                        statusDiv.innerText = `Rendering... Status: ${data.status}`;
+                        statusDiv.innerText = `Выполняется рендеринг... Состояние: ${data.status}`;
                     }
                 } catch (error) {
-                    statusDiv.innerText = `Error checking status: ${error}`;
+                    statusDiv.innerText = `Ошибка опроса задачи: ${error}`;
                     renderButton.disabled = false;
                     clearInterval(intervalId);
                 }

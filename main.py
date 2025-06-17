@@ -11,18 +11,45 @@ celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
 
 @celery.task
-def create_parallax_video(image_path, params):
+def create_parallax_video(image_path, params, animation=None):
     duration = params["duration"] or "10"
     framerate = params["framerate"] or "60"
     height = params["height"] or "1080"
     width = params["width"] or "1920"
-    try:
-        output_video = f"static/output_{uuid.uuid4()}.mp4"
-        command = ["depthflow", "input", "-i", image_path, "main", "--time", duration, "--fps", framerate, "--height", height, "--width", width,  "-o", output_video]
-        subprocess.run(command, check=True)
-        return output_video
-    except subprocess.CalledProcessError as e:
-        return f"Error: {e}"
+
+    output_video = f"static/output_{uuid.uuid4()}.mp4"
+
+    if animation and animation["animation_type"] == "circle":
+        try:
+            command = ["depthflow",
+                        "input", "-i", image_path,
+                        "circle", 
+                        "--intensity", animation["intensity"],
+                        "--reverse", f"--{animation["reverse"]}",
+                        "--cumulative", f"--{animation["cumulative"]}",
+                        "--smooth", f"--{animation["smooth"]}",
+                        "--isometric", animation["isometric"],
+                        "--steady", animation["steady"],
+                        "main",
+                        "-o", output_video]
+            subprocess.run(command, check=True)
+            return output_video
+        except subprocess.CalledProcessError as e:
+            return f"Error: {e}"
+    else:
+        try:
+            command = ["depthflow",
+                        "input", "-i", image_path, 
+                        "main", 
+                        "--time", duration, 
+                        "--fps", framerate, 
+                        "--height", height, 
+                        "--width", width,  
+                        "-o", output_video]
+            subprocess.run(command, check=True)
+            return output_video
+        except subprocess.CalledProcessError as e:
+            return f"Error: {e}"
 
 @app.route("/")
 def index():
@@ -41,7 +68,19 @@ def create_video():
         "width": None if request.form["width"] == "" else request.form["width"]
     }
 
-    print(params)
+    if request.form.get("animation_type", None):
+        animation_params = {
+            "animation_type": None or request.form["animation_type"],
+            "cumulative": None or request.form["cumulative"],
+            "reverse": None or request.form["reverse"],
+            "smooth": None or request.form["smooth"],
+            "isometric": None or request.form["isometric"],
+            "intensity": None or request.form["intensity"],
+            "steady": None or request.form["steady"],
+            "isLooped": None or request.form["looped"],
+        }
+    else:
+        animation_params = None
     
     image = request.files['image']
     if image.filename == '':
@@ -50,7 +89,7 @@ def create_video():
     image_path = f'temp/temp_{uuid.uuid4()}.jpg'
     image.save(f'{image_path}')
 
-    task = create_parallax_video.delay(image_path, params)
+    task = create_parallax_video.delay(image_path, params, animation_params)
     return jsonify({'task_id': task.id}), 202
 
 @app.route("/api/task_status/<task_id>", methods=['GET'])
