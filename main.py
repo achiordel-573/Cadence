@@ -14,6 +14,8 @@ celery.conf.update(app.config)
 def create_parallax_video(image_path: str, default_settings: dict, animation_settings: dict):
     def setting_to_arg(setting: str):
         """ Преобразует параметр в аргумент """
+        if isinstance(setting, bool) and setting:
+            return ""
         return f"--{setting}"
         
     output_video = f"static/output_{uuid.uuid4()}.mp4"
@@ -118,7 +120,7 @@ def create_video():
             "reverse": request.form["horizontalReverse"],
             "cumulative": request.form["horizontalCumulative"],
             "smooth": request.form["horizontalSmooth"],
-            "loop": "" if request.form["horizontalLoop"] else "no-loop" ,
+            "loop": True if request.form["horizontalLoop"] else "no-loop" ,
             "steady": request.form["horizontalSteady"],
             "isometric": request.form["horizontalIsometric"],
         }
@@ -132,7 +134,7 @@ def create_video():
             "reverse": request.form["verticalReverse"],
             "cumulative": request.form["verticalCumulative"],
             "smooth": request.form["verticalSmooth"],
-            "loop": "" if request.form["verticalLoop"] else "no-loop",
+            "loop": True if request.form["verticalLoop"] else "no-loop",
             "steady": request.form["verticalSteady"],
             "isometric": request.form["verticalIsometric"],
         }
@@ -146,7 +148,7 @@ def create_video():
             "reverse": request.form["zoomReverse"],
             "cumulative": request.form["zoomCumulative"],
             "smooth": request.form["zoomSmooth"],
-            "loop": "" if request.form["zoomLoop"] else "no-loop",
+            "loop": True if request.form["zoomLoop"] else "no-loop",
         }
     else:
         animation_settings["zoom"]["enabled"] = False
